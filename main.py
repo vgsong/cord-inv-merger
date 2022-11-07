@@ -191,7 +191,7 @@ class InvMergerBot:
         df = pd.DataFrame.from_dict(work_order)
         print("Workorder output:\n")
         print(df)
-        df.to_csv(f"{self.main_dir}\wo.csv", index=False)
+        df.to_csv(f"{self.main_dir}/wo.csv", index=False)
         time.sleep(0.5)
         print(f"Workorder created at: {self.main_dir}/wo.csv")
 
