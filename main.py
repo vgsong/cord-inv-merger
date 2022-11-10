@@ -142,7 +142,6 @@ class InvMergerBot:
 
             return result
 
-
         def pdf_to_str(apdf):
             # gets opened pdf obj from passed argument
             # uses PyPDF2 to parse strings
@@ -160,13 +159,14 @@ class InvMergerBot:
         work_order = {
                     "PRONUM": list(),"INVNUM": list(),"EMPNAME": list(),
                     }
-                    
+
         try:
             regex_member_list_pattern = prepare_regex_list()
 
         except AttributeError:
             print("Empty member_list detected!")
             print("Please populate member folder with teammeber\nLAST, FIRST name format")
+            print("and rerun the script.")
             return
 
         regex_project_pattern = "1112.\d{3}.\d{3}|" \
@@ -211,7 +211,7 @@ def main():
     INVMERGER = InvMergerBot(2022, 9)
     INVMERGER.create_workorder()
     time.sleep(1)
-    # INVMERGER.start_wo()
+    INVMERGER.start_wo()
     
 
 if __name__ == '__main__':
