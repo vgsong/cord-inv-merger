@@ -29,22 +29,25 @@ class InvMergerBot:
                 os.mkdir(f"{self.main_dir}/{subdir}")
 
             time.sleep(0.5)
-
             print(
                     "Month-end DIR created. " \
                     "Make sure you populate TS dir\n" \
                     "with the proper FTE group ./TS/LAST, FIRST\n" \
                     "and reload the script.\n"
                 )
+            
+            return
 
         else:
             print(f'dir month already exists')
+
             if not os.listdir(f"{self.main_dir}/TS"):
                 print(
                     "TS folder is empty, " \
                     "make sure you add the\n" \
                     "TS folders before running."
                 )
+                return
 
             else:
                 print("TS FTE list detected in dir!")
@@ -130,6 +133,7 @@ class InvMergerBot:
         def prepare_regex_list():
             # gets the reject pattern based on self.member_list in TS dir
             result = str()
+
             for n in enumerate(self.member_list):
                 if n[0] != len(self.member_list)-1:
                     result += f'{n[1]}|'
@@ -137,6 +141,7 @@ class InvMergerBot:
                     result += f'{n[1]}'
 
             return result
+
 
         def pdf_to_str(apdf):
             # gets opened pdf obj from passed argument
@@ -155,8 +160,14 @@ class InvMergerBot:
         work_order = {
                     "PRONUM": list(),"INVNUM": list(),"EMPNAME": list(),
                     }
+                    
+        try:
+            regex_member_list_pattern = prepare_regex_list()
 
-        regex_member_list_pattern = prepare_regex_list()
+        except AttributeError:
+            print("Empty member_list detected!")
+            print("Please populate member folder with teammeber\nLAST, FIRST name format")
+            return
 
         regex_project_pattern = "1112.\d{3}.\d{3}|" \
                                 "1112.\d{3}.00R|" \
@@ -200,7 +211,7 @@ def main():
     INVMERGER = InvMergerBot(2022, 9)
     INVMERGER.create_workorder()
     time.sleep(1)
-    INVMERGER.start_wo()
+    # INVMERGER.start_wo()
     
 
 if __name__ == '__main__':
