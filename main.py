@@ -74,6 +74,10 @@ class InvMergerBot:
 
         wo = pd.read_csv(f"{self.main_dir}/wo.csv", names=wo_cols, skiprows=1)
 
+        approval_type = (
+                        "TS", "EXPENSE"
+                        )
+
         # creates a temp list of invoices into invoice_wo
         # invoice_wo does not contain duplicated invoice number
         # to avoid including the same TS group twice or more
@@ -99,19 +103,13 @@ class InvMergerBot:
                 merger.append(inv_file)
                 print(f"starting {tsname} merging")
 
-                for fdir in glob.glob(f"{self.main_dir}/TS/{tsname}/*.pdf"):
-                    print(f"merging {invnum} with {os.path.basename(fdir)}")
-                    ts_file = PyPDF2.PdfFileReader(open(fdir, "rb"))
-                    merger.append(ts_file)
-                    del ts_file
-                    time.sleep(1)
-
-                for fdir in glob.glob(f"{self.main_dir}/EXPENSES/{tsname}/*.pdf"):
-                    print(f"merging {invnum} with {os.path.basename(fdir)}")
-                    expense_file = PyPDF2.PdfFileReader(open(fdir, "rb"))
-                    merger.append(expense_file)
-                    del expense_file
-                    time.sleep(1)
+                for at in approval_type:
+                    for fdir in glob.glob(f"{self.main_dir}/{at}/{tsname}/*.pdf"):
+                        print(f"merging {invnum} with {os.path.basename(fdir)}")
+                        appendee_file = PyPDF2.PdfFileReader(open(fdir, "rb"))
+                        merger.append(appendee_file)
+                        del appendee_file
+                        time.sleep(1)
 
                 merger.write(f"{self.main_dir}/DONE/{invnum}.pdf")
                 time.sleep(1)
